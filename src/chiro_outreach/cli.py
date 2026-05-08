@@ -47,7 +47,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     draft = subparsers.add_parser("draft", help="Generate personalized outreach drafts.")
     draft.add_argument("--limit", type=int, default=0)
-    draft.add_argument("--variant", default="research_short", choices=OUTREACH_VARIANTS)
+    draft.add_argument("--variant", default="", choices=("", *OUTREACH_VARIANTS))
     draft.add_argument("--rotate-variants", action="store_true")
     draft.set_defaults(func=cmd_draft)
 
@@ -294,7 +294,10 @@ def cmd_draft(args: argparse.Namespace) -> int:
             continue
         if contact.get("outreach_status") not in {"ready", "draft_ready", "not_ready"}:
             continue
-        variant = OUTREACH_VARIANTS[drafted % len(OUTREACH_VARIANTS)] if args.rotate_variants else args.variant
+        if args.rotate_variants:
+            variant = OUTREACH_VARIANTS[drafted % len(OUTREACH_VARIANTS)]
+        else:
+            variant = args.variant or contact.get("outreach_variant") or "research_short"
         subject, body = build_outreach_email(contact, config, variant=variant)
         contact["outreach_variant"] = variant
         contact["personalized_subject"] = subject
