@@ -1,0 +1,10 @@
+.secrets/
+config/local.env*
+config/outreach_config.local.json
+__pycache__/
+.pytest_cache/
+.streamlit/
+.venv/
+data/*.bak
+data/*.csv
+*.pyc

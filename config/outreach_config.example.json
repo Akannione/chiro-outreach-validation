@@ -1,0 +1,17 @@
+{
+  "survey_url": "https://forms.gle/HjWbEG3Z7hzNY9L1A",
+  "response_spreadsheet_id": "1KYV7PnUgdrwU8uraYjDqz2-yJxbKpBHf_9_olweHOLU",
+  "form_responses_range": "Form Responses 1!A:Z",
+  "outreach_spreadsheet_id": "",
+  "sender_name": "Your Name",
+  "sender_email": "you@example.com",
+  "sender_phone": "",
+  "company_name": "Independent chiropractic workflow research",
+  "postal_address": "YOUR VALID POSTAL ADDRESS REQUIRED BEFORE SENDING",
+  "daily_send_cap": 20,
+  "batch_send_cap": 10,
+  "min_delay_seconds": 120,
+  "max_delay_seconds": 360,
+  "google_oauth_client_secret": ".secrets/client_secret.json",
+  "google_oauth_token": ".secrets/token.json"
+}
