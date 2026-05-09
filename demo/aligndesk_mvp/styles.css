@@ -208,6 +208,26 @@ h3 {
   font-weight: 800;
 }
 
+.secondary-button {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  min-height: 40px;
+  background: white;
+  color: var(--ink);
+  padding: 0 12px;
+  font-weight: 800;
+}
+
+.secondary-button:hover {
+  border-color: var(--accent);
+  color: var(--accent-strong);
+}
+
+.secondary-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
+}
+
 .workflow-grid {
   display: grid;
   grid-template-columns: minmax(340px, 0.95fr) minmax(420px, 1.05fr);
@@ -244,6 +264,10 @@ h3 {
   justify-content: space-between;
   gap: 12px;
   margin-bottom: 14px;
+}
+
+.section-heading.compact {
+  margin-bottom: 8px;
 }
 
 .status-pill {
@@ -301,6 +325,28 @@ textarea {
 
 textarea {
   resize: vertical;
+}
+
+.dictation-card {
+  margin-top: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fbfcfa;
+  padding: 14px;
+}
+
+.privacy-note {
+  margin: 0 0 12px;
+  color: var(--muted);
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
+.dictation-actions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) 42px;
+  gap: 8px;
+  margin-bottom: 12px;
 }
 
 input[type="text"]:focus,
@@ -488,6 +534,7 @@ input[type="range"] {
   .field-grid.two,
   .check-fieldset.dense,
   .metrics-strip,
+  .dictation-actions,
   .tabs {
     grid-template-columns: 1fr;
   }

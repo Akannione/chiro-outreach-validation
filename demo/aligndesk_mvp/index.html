@@ -110,6 +110,29 @@
                 <textarea id="chiefConcern" name="chiefConcern" rows="3"></textarea>
               </label>
 
+              <section class="dictation-card" aria-label="Dictation assistant">
+                <div class="section-heading compact">
+                  <div>
+                    <p class="eyebrow">Doctor-controlled</p>
+                    <h3>Dictation capture</h3>
+                  </div>
+                  <span class="status-pill neutral" id="speechStatus">Mic idle</span>
+                </div>
+                <p class="privacy-note">
+                  Demo only. Do not use real patient identifiers. Browser dictation may send audio to a speech service depending on the browser.
+                </p>
+                <div class="dictation-actions">
+                  <button id="startDictation" class="secondary-button" type="button">Start dictation</button>
+                  <button id="stopDictation" class="secondary-button" type="button" disabled>Stop</button>
+                  <button id="applyDictation" class="secondary-button" type="button">Update note</button>
+                  <button id="clearDictation" class="icon-button" type="button" title="Clear dictation" aria-label="Clear dictation">x</button>
+                </div>
+                <label>
+                  Dictated visit notes
+                  <textarea id="dictationNotes" name="dictationNotes" rows="4" placeholder="Example: Patient reports low back pain six out of ten after lifting. No red flags. Sitting and lifting are limited. Adjust today and give home exercises."></textarea>
+                </label>
+              </section>
+
               <fieldset class="check-fieldset">
                 <legend>Red flag review</legend>
                 <label><input name="redFlags" value="No red flags reported" type="checkbox" /> No red flags reported</label>
