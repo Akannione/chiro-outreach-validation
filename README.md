@@ -116,6 +116,20 @@ Send a real one-to-one batch:
 PYTHONPATH=src python -m chiro_outreach.cli send --limit 10 --send
 ```
 
+Draft public demo follow-ups:
+
+```bash
+PYTHONPATH=src python -m chiro_outreach.cli demo-followups --limit 10
+```
+
+Send demo follow-ups only after reviewing the generated CSV in `reports/`:
+
+```bash
+PYTHONPATH=src python -m chiro_outreach.cli demo-followups --limit 10 --send
+```
+
+Use `--respondents-only` for people who left emails in the survey, or `--contacts-only` for clinics already contacted.
+
 Check for replies:
 
 ```bash

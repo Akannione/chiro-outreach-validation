@@ -200,7 +200,7 @@ def sent_in_last_24_hours() -> int:
     cutoff = datetime.now(timezone.utc) - timedelta(hours=24)
     count = 0
     for row in read_rows(OUTREACH_LOG_CSV):
-        if row.get("event_type") != "sent":
+        if row.get("event_type") not in {"sent", "demo_followup_sent"}:
             continue
         timestamp = parse_iso_datetime(row.get("timestamp", ""))
         if timestamp and timestamp >= cutoff:

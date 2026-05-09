@@ -5,6 +5,7 @@ from collections import Counter
 
 from .config import load_config
 from .csv_store import CONTACT_FIELDS, SUPPRESSION_FIELDS, append_row, ensure_data_files, load_contacts, save_contacts
+from .demo_followup import run_demo_followups
 from .email_finder import email_matches_to_json, enrich_website, form_fields_to_json, is_public_contact_email
 from .form_submitter import draft_contact_forms, preview_form_plans, submit_form_batch
 from .gmail_client import check_replies, send_batch
@@ -57,6 +58,15 @@ def build_parser() -> argparse.ArgumentParser:
     send.add_argument("--min-delay-seconds", type=int, default=None)
     send.add_argument("--max-delay-seconds", type=int, default=None)
     send.set_defaults(func=cmd_send)
+
+    demo_followups = subparsers.add_parser("demo-followups", help="Draft or send demo follow-up emails.")
+    demo_followups.add_argument("--limit", type=int, default=None)
+    demo_followups.add_argument("--send", action="store_true", help="Actually send. Omit for dry run.")
+    demo_followups.add_argument("--contacts-only", action="store_true", help="Only follow up with previously contacted clinics.")
+    demo_followups.add_argument("--respondents-only", action="store_true", help="Only follow up with survey respondents who left email.")
+    demo_followups.add_argument("--min-delay-seconds", type=int, default=None)
+    demo_followups.add_argument("--max-delay-seconds", type=int, default=None)
+    demo_followups.set_defaults(func=cmd_demo_followups)
 
     form_draft = subparsers.add_parser("draft-forms", help="Draft outreach messages for contact-form-only leads.")
     form_draft.add_argument("--limit", type=int, default=10)
@@ -318,6 +328,28 @@ def cmd_send(args: argparse.Namespace) -> int:
     count = send_batch(config, limit, min_delay, max_delay, args.send)
     mode = "sent" if args.send else "dry-run checked"
     print(f"{mode}: {count} contacts.")
+    return 0
+
+
+def cmd_demo_followups(args: argparse.Namespace) -> int:
+    config = load_config()
+    limit = args.limit or int(config.get("batch_send_cap", 10))
+    min_delay = args.min_delay_seconds or int(config.get("min_delay_seconds", 120))
+    max_delay = args.max_delay_seconds or int(config.get("max_delay_seconds", 360))
+    include_contacts = not args.respondents_only
+    include_respondents = not args.contacts_only
+    count, report_path = run_demo_followups(
+        config,
+        limit,
+        min_delay,
+        max_delay,
+        args.send,
+        include_contacts=include_contacts,
+        include_respondents=include_respondents,
+    )
+    mode = "sent" if args.send else "dry-run drafted"
+    print(f"{mode}: {count} demo follow-ups.")
+    print(f"Draft CSV: {report_path}")
     return 0
 
 

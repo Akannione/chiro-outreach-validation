@@ -459,6 +459,10 @@ function currentFeedback() {
     savedAt: new Date().toISOString(),
     role: document.querySelector("#feedbackRole").value,
     saveTime: document.querySelector("#saveTime").value,
+    currentEhr: document.querySelector("#currentEhr").value.trim(),
+    noteTime: document.querySelector("#noteTime").value,
+    notesPerDay: document.querySelector("#notesPerDay").value,
+    mostValuable: document.querySelector("#mostValuable").value,
     priceReaction: document.querySelector("#priceReaction").value,
     missingPiece: document.querySelector("#missingPiece").value.trim(),
     patientCase: getState().visitType,
@@ -472,6 +476,10 @@ function emailFeedback() {
     "",
     `Clinic role: ${feedback.role}`,
     `Would this save time: ${feedback.saveTime}`,
+    `Current EHR or note tool: ${feedback.currentEhr || "Not provided"}`,
+    `Documentation time per visit: ${feedback.noteTime}`,
+    `Approx notes per day: ${feedback.notesPerDay}`,
+    `Most valuable part: ${feedback.mostValuable}`,
     `Monthly price reaction: ${feedback.priceReaction}`,
     `Biggest missing piece: ${feedback.missingPiece || "Not provided"}`,
     `Demo case viewed: ${feedback.patientCase}`,
@@ -486,7 +494,18 @@ function emailFeedback() {
 
 function exportFeedback() {
   const entries = JSON.parse(localStorage.getItem("aligndeskFeedback") || "[]");
-  const header = ["savedAt", "role", "saveTime", "priceReaction", "missingPiece", "patientCase"];
+  const header = [
+    "savedAt",
+    "role",
+    "saveTime",
+    "currentEhr",
+    "noteTime",
+    "notesPerDay",
+    "mostValuable",
+    "priceReaction",
+    "missingPiece",
+    "patientCase",
+  ];
   const rows = [header.join(",")].concat(
     entries.map((entry) =>
       header

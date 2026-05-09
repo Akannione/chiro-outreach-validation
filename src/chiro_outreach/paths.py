@@ -5,6 +5,7 @@ PACKAGE_DIR = Path(__file__).resolve().parent
 PROJECT_DIR = PACKAGE_DIR.parents[1]
 CONFIG_DIR = PROJECT_DIR / "config"
 DATA_DIR = PROJECT_DIR / "data"
+REPORTS_DIR = PROJECT_DIR / "reports"
 SECRETS_DIR = PROJECT_DIR / ".secrets"
 
 CONTACTS_CSV = DATA_DIR / "contacts.csv"
@@ -15,4 +16,3 @@ FORM_RESPONSES_CSV = DATA_DIR / "form_responses.csv"
 CONFIG_EXAMPLE = CONFIG_DIR / "outreach_config.example.json"
 CONFIG_LOCAL = CONFIG_DIR / "outreach_config.local.json"
 TARGET_MARKETS = CONFIG_DIR / "target_markets.json"
-

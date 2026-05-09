@@ -282,6 +282,40 @@
                   </select>
                 </label>
                 <label>
+                  Current EHR or note tool
+                  <input id="currentEhr" type="text" placeholder="Example: ChiroTouch, Jane, Genesis, paper notes" />
+                </label>
+                <label>
+                  Documentation time per visit
+                  <select id="noteTime">
+                    <option>Under 3 minutes</option>
+                    <option>3-5 minutes</option>
+                    <option>6-10 minutes</option>
+                    <option>Over 10 minutes</option>
+                    <option>Mostly after clinic hours</option>
+                  </select>
+                </label>
+                <label>
+                  Approx notes per day
+                  <select id="notesPerDay">
+                    <option>1-10</option>
+                    <option>11-25</option>
+                    <option>26-50</option>
+                    <option>51+</option>
+                  </select>
+                </label>
+                <label>
+                  Most valuable part
+                  <select id="mostValuable">
+                    <option>Faster SOAP note generation</option>
+                    <option>Chiropractic-specific templates</option>
+                    <option>Dictation into note fields</option>
+                    <option>EHR-ready copy/paste</option>
+                    <option>Follow-up task handoff</option>
+                    <option>Needs EHR integration first</option>
+                  </select>
+                </label>
+                <label>
                   Monthly price reaction
                   <select id="priceReaction">
                     <option>$0-$25</option>

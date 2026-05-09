@@ -18,6 +18,7 @@ def load_config() -> dict[str, Any]:
 
     env_map = {
         "survey_url": "SURVEY_URL",
+        "demo_url": "ALIGNDESK_DEMO_URL",
         "response_spreadsheet_id": "RESPONSE_SPREADSHEET_ID",
         "form_responses_range": "FORM_RESPONSES_RANGE",
         "outreach_spreadsheet_id": "OUTREACH_SPREADSHEET_ID",

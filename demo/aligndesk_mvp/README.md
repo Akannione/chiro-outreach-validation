@@ -37,6 +37,8 @@ https://akannione.github.io/aligndeskapp-demo/
 - Does the generated note match how they document care?
 - Would this save real time during or after visits?
 - Which note templates matter most?
+- What EHR or documentation workflow do they use today?
+- How many minutes per visit does documentation take?
 - Would they pay $50-$100/month if this worked with their current EHR workflow?
 - Is copy/paste enough for v1, or is integration required before they care?
 
