@@ -12,6 +12,8 @@ from .time_utils import utc_now_iso
 
 
 GMAIL_SCOPES = OUTREACH_GOOGLE_SCOPES
+DEMO_FOLLOWUP_SENT_EVENT = "demo_followup_sent"
+DEMO_FOLLOWUP_RESPONDED_EVENT = "demo_followup_responded"
 
 
 def gmail_send_message(
@@ -66,9 +68,69 @@ def check_replies(config: dict[str, str], limit: int = 100) -> int:
         )
         updated += 1
 
+    updated += check_demo_followup_replies(service, sender_email, max(0, limit - updated))
+
     if updated:
         save_contacts(contacts)
     return updated
+
+
+def check_demo_followup_replies(service, sender_email: str, limit: int) -> int:
+    if limit <= 0:
+        return 0
+    sent_events = demo_followup_sent_events()
+    responded_emails = {
+        normalize_email(row.get("email", ""))
+        for row in read_rows(OUTREACH_LOG_CSV)
+        if row.get("event_type") == DEMO_FOLLOWUP_RESPONDED_EVENT and row.get("email")
+    }
+    updated = 0
+
+    for event in sent_events:
+        if updated >= limit:
+            break
+        email = normalize_email(event.get("email", ""))
+        if not email or email in responded_emails:
+            continue
+
+        response = service.users().messages().list(
+            userId="me",
+            q=f"from:{email} {gmail_after_date(event.get('timestamp', ''))}".strip(),
+            maxResults=10,
+        ).execute()
+        messages = response.get("messages", [])
+        if not messages:
+            continue
+
+        now = utc_now_iso()
+        append_log(
+            {
+                "log_id": stable_id(event.get("contact_id", email), DEMO_FOLLOWUP_RESPONDED_EVENT, now),
+                "contact_id": event.get("contact_id", ""),
+                "clinic_name": event.get("clinic_name", ""),
+                "email": email,
+                "event_type": DEMO_FOLLOWUP_RESPONDED_EVENT,
+                "timestamp": now,
+                "details": f"Demo follow-up reply detected with Gmail query. Sender account: {sender_email}",
+            }
+        )
+        updated += 1
+
+    return updated
+
+
+def demo_followup_sent_events() -> list[dict[str, str]]:
+    by_email: dict[str, dict[str, str]] = {}
+    for row in read_rows(OUTREACH_LOG_CSV):
+        if row.get("event_type") != DEMO_FOLLOWUP_SENT_EVENT:
+            continue
+        email = normalize_email(row.get("email", ""))
+        if not email:
+            continue
+        existing = by_email.get(email)
+        if not existing or row.get("timestamp", "") > existing.get("timestamp", ""):
+            by_email[email] = row
+    return sorted(by_email.values(), key=lambda row: row.get("timestamp", ""), reverse=True)
 
 
 def send_batch(

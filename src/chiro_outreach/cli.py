@@ -390,7 +390,7 @@ def cmd_submit_forms(args: argparse.Namespace) -> int:
 
 def cmd_check_replies(args: argparse.Namespace) -> int:
     updated = check_replies(load_config(), limit=args.limit)
-    print(f"Marked {updated} contacts as responded.")
+    print(f"Logged {updated} replies.")
     return 0
 
 

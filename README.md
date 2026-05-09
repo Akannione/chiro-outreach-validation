@@ -136,6 +136,8 @@ Check for replies:
 PYTHONPATH=src python -m chiro_outreach.cli check-replies
 ```
 
+This checks both the original clinic outreach and demo follow-up replies.
+
 Record an opt-out immediately:
 
 ```bash
