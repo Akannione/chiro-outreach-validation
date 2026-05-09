@@ -26,6 +26,12 @@ demo/aligndesk_mvp/index.html
 
 No server or package install is required.
 
+Public validation link:
+
+```text
+https://akannione.github.io/aligndeskapp-demo/
+```
+
 ## What To Test With Clinics
 
 - Does the generated note match how they document care?
