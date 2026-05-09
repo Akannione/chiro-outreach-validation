@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AlignDeskApp MVP Demo</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Demo workspace">
+        <div class="brand-block">
+          <div class="brand-mark" aria-hidden="true">A</div>
+          <div>
+            <p class="eyebrow">AlignDeskApp</p>
+            <h1>Chiro Note Flow</h1>
+          </div>
+        </div>
+
+        <nav class="case-list" aria-label="Visit templates">
+          <button class="case-button active" data-template="lowBack" type="button">
+            <span class="case-dot"></span>
+            New low back visit
+          </button>
+          <button class="case-button" data-template="neck" type="button">
+            <span class="case-dot"></span>
+            Neck pain follow-up
+          </button>
+          <button class="case-button" data-template="pediatric" type="button">
+            <span class="case-dot"></span>
+            Pediatric wellness
+          </button>
+          <button class="case-button" data-template="reeval" type="button">
+            <span class="case-dot"></span>
+            Re-evaluation
+          </button>
+        </nav>
+
+        <section class="metrics-strip" aria-label="Workflow metrics">
+          <div>
+            <span id="completionMetric">72%</span>
+            <p>Note complete</p>
+          </div>
+          <div>
+            <span id="timeMetric">9 min</span>
+            <p>Estimated saved</p>
+          </div>
+          <div>
+            <span id="taskMetric">3</span>
+            <p>Follow-ups</p>
+          </div>
+        </section>
+      </aside>
+
+      <main class="workspace">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">48-hour validation demo</p>
+            <h2>Documentation workflow</h2>
+          </div>
+          <div class="topbar-actions">
+            <button id="resetButton" class="icon-button" type="button" title="Reset case" aria-label="Reset case">
+              <span aria-hidden="true">&#8634;</span>
+            </button>
+            <button id="copyButton" class="primary-button" type="button">Copy EHR note</button>
+          </div>
+        </header>
+
+        <section class="workflow-grid">
+          <form id="noteForm" class="input-panel" autocomplete="off">
+            <section class="panel-section">
+              <div class="section-heading">
+                <h3>Visit Snapshot</h3>
+                <span class="status-pill" id="visitStatus">Needs red flag review</span>
+              </div>
+
+              <div class="field-grid two">
+                <label>
+                  Patient
+                  <input id="patientName" name="patientName" type="text" />
+                </label>
+                <label>
+                  Visit type
+                  <select id="visitType" name="visitType">
+                    <option>Initial evaluation</option>
+                    <option>Follow-up adjustment</option>
+                    <option>Pediatric exam</option>
+                    <option>Re-evaluation</option>
+                  </select>
+                </label>
+                <label>
+                  Primary region
+                  <select id="region" name="region">
+                    <option>Lumbar spine</option>
+                    <option>Cervical spine</option>
+                    <option>Thoracic spine</option>
+                    <option>Pelvis / SI</option>
+                    <option>Pediatric wellness</option>
+                  </select>
+                </label>
+                <label>
+                  Pain score
+                  <input id="painScore" name="painScore" type="range" min="0" max="10" />
+                  <span class="range-value"><span id="painScoreValue">6</span>/10</span>
+                </label>
+              </div>
+
+              <label>
+                Chief concern
+                <textarea id="chiefConcern" name="chiefConcern" rows="3"></textarea>
+              </label>
+
+              <fieldset class="check-fieldset">
+                <legend>Red flag review</legend>
+                <label><input name="redFlags" value="No red flags reported" type="checkbox" /> No red flags reported</label>
+                <label><input name="redFlags" value="Numbness/tingling screened" type="checkbox" /> Numbness/tingling screened</label>
+                <label><input name="redFlags" value="Referral criteria reviewed" type="checkbox" /> Referral criteria reviewed</label>
+              </fieldset>
+            </section>
+
+            <section class="panel-section">
+              <div class="section-heading">
+                <h3>Exam Findings</h3>
+                <span class="status-pill neutral" id="examStatus">3 findings</span>
+              </div>
+
+              <div class="field-grid two">
+                <label>
+                  ROM
+                  <select id="rom" name="rom">
+                    <option>Reduced flexion and extension</option>
+                    <option>Reduced cervical rotation</option>
+                    <option>Within functional limits</option>
+                    <option>Guarded movement pattern</option>
+                  </select>
+                </label>
+                <label>
+                  Palpation
+                  <select id="palpation" name="palpation">
+                    <option>Paraspinal hypertonicity and segmental restriction</option>
+                    <option>Upper trap and levator tenderness</option>
+                    <option>Mild tenderness without acute distress</option>
+                    <option>SI tenderness with glute compensation</option>
+                  </select>
+                </label>
+              </div>
+
+              <fieldset class="check-fieldset dense">
+                <legend>Positive findings</legend>
+                <label><input name="findings" value="Functional limitation with sitting" type="checkbox" /> Sitting limitation</label>
+                <label><input name="findings" value="Functional limitation with lifting" type="checkbox" /> Lifting limitation</label>
+                <label><input name="findings" value="Postural compensation noted" type="checkbox" /> Postural compensation</label>
+                <label><input name="findings" value="Home care compliance reviewed" type="checkbox" /> Home care reviewed</label>
+                <label><input name="findings" value="Neurologic screen within expected limits" type="checkbox" /> Neuro screen clear</label>
+              </fieldset>
+            </section>
+
+            <section class="panel-section">
+              <div class="section-heading">
+                <h3>Plan</h3>
+                <span class="status-pill neutral" id="planStatus">Care plan ready</span>
+              </div>
+
+              <fieldset class="check-fieldset dense">
+                <legend>Today</legend>
+                <label><input name="plan" value="Chiropractic adjustment" type="checkbox" /> Adjustment</label>
+                <label><input name="plan" value="Soft tissue therapy" type="checkbox" /> Soft tissue</label>
+                <label><input name="plan" value="Therapeutic exercise instruction" type="checkbox" /> Exercise instruction</label>
+                <label><input name="plan" value="Ergonomic coaching" type="checkbox" /> Ergonomics</label>
+                <label><input name="plan" value="Re-evaluate next visit" type="checkbox" /> Re-evaluate next visit</label>
+              </fieldset>
+
+              <label>
+                Frequency
+                <select id="frequency" name="frequency">
+                  <option>2x/week for 2 weeks, then reassess</option>
+                  <option>1x/week for 4 weeks</option>
+                  <option>As needed with home care</option>
+                  <option>Wellness check in 4 weeks</option>
+                </select>
+              </label>
+            </section>
+          </form>
+
+          <section class="output-panel">
+            <div class="tabs" role="tablist" aria-label="Generated documentation">
+              <button class="tab-button active" data-tab="soap" type="button">SOAP</button>
+              <button class="tab-button" data-tab="ehr" type="button">EHR paste</button>
+              <button class="tab-button" data-tab="tasks" type="button">Tasks</button>
+              <button class="tab-button" data-tab="feedback" type="button">Reaction</button>
+            </div>
+
+            <article id="soapTab" class="tab-panel active">
+              <div class="note-header">
+                <div>
+                  <p class="eyebrow">Generated note</p>
+                  <h3 id="noteTitle">Jordan Lee · Initial evaluation</h3>
+                </div>
+                <span class="status-pill good" id="auditStatus">Ready to paste</span>
+              </div>
+              <pre id="soapNote" class="note-output"></pre>
+            </article>
+
+            <article id="ehrTab" class="tab-panel">
+              <div class="note-header">
+                <div>
+                  <p class="eyebrow">Plain text</p>
+                  <h3>EHR output</h3>
+                </div>
+                <button id="copyPlainButton" class="icon-button" type="button" title="Copy EHR output" aria-label="Copy EHR output">&#10697;</button>
+              </div>
+              <textarea id="ehrOutput" class="ehr-output" rows="18" readonly></textarea>
+            </article>
+
+            <article id="tasksTab" class="tab-panel">
+              <div class="note-header">
+                <div>
+                  <p class="eyebrow">Clinic handoff</p>
+                  <h3>Follow-up queue</h3>
+                </div>
+                <span class="status-pill neutral">Front desk ready</span>
+              </div>
+              <ul id="taskList" class="task-list"></ul>
+            </article>
+
+            <article id="feedbackTab" class="tab-panel">
+              <div class="note-header">
+                <div>
+                  <p class="eyebrow">Demo reaction</p>
+                  <h3>Clinic feedback</h3>
+                </div>
+                <button id="exportFeedbackButton" class="icon-button" type="button" title="Export feedback CSV" aria-label="Export feedback CSV">&#8681;</button>
+              </div>
+
+              <form id="feedbackForm" class="feedback-form">
+                <label>
+                  Clinic role
+                  <select id="feedbackRole">
+                    <option>Doctor / owner</option>
+                    <option>Office manager</option>
+                    <option>Front desk</option>
+                    <option>Student clinic</option>
+                  </select>
+                </label>
+                <label>
+                  Would this save time?
+                  <select id="saveTime">
+                    <option>Yes, immediately</option>
+                    <option>Maybe with changes</option>
+                    <option>No</option>
+                  </select>
+                </label>
+                <label>
+                  Monthly price reaction
+                  <select id="priceReaction">
+                    <option>$0-$25</option>
+                    <option>$50-$100</option>
+                    <option>$100-$200</option>
+                    <option>Only if integrated with current EHR</option>
+                  </select>
+                </label>
+                <label>
+                  Biggest missing piece
+                  <textarea id="missingPiece" rows="4"></textarea>
+                </label>
+                <button class="primary-button" type="submit">Save reaction</button>
+              </form>
+
+              <div id="feedbackSaved" class="saved-state" aria-live="polite"></div>
+            </article>
+          </section>
+        </section>
+      </main>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

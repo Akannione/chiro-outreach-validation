@@ -176,6 +176,18 @@ Run the dashboard:
 streamlit run dashboard.py
 ```
 
+## 48-Hour MVP Demo
+
+The AlignDeskApp validation demo lives at:
+
+```text
+demo/aligndesk_mvp/index.html
+```
+
+Open it in a browser to show a chiropractic documentation workflow demo: visit template, exam findings, generated SOAP note, EHR-ready copy output, follow-up queue, and local reaction capture.
+
+Use it to test whether clinics care about a narrow documentation/workflow assistant before building integrations, auth, patient storage, or a full SaaS app.
+
 ## Sending Rules
 
 - Default is dry-run. Real sending requires `--send`.
