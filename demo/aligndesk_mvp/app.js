@@ -98,10 +98,13 @@ const feedbackForm = document.querySelector("#feedbackForm");
 const feedbackSaved = document.querySelector("#feedbackSaved");
 const speechStatus = document.querySelector("#speechStatus");
 const dictationNotes = document.querySelector("#dictationNotes");
+const dictationConsent = document.querySelector("#dictationConsent");
 const startDictation = document.querySelector("#startDictation");
 const stopDictation = document.querySelector("#stopDictation");
 const applyDictation = document.querySelector("#applyDictation");
 const clearDictation = document.querySelector("#clearDictation");
+const shareButton = document.querySelector("#shareButton");
+const emailFeedbackButton = document.querySelector("#emailFeedbackButton");
 
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 let recognition;
@@ -138,7 +141,7 @@ function getState() {
 function applyTemplate(key) {
   const data = templates[key];
   fields.forEach((field) => {
-    document.querySelector(`#${field}`).value = data[field];
+    document.querySelector(`#${field}`).value = data[field] ?? "";
   });
   checkboxGroups.forEach((group) => setChecked(group, data[group]));
   document.querySelectorAll(".case-button").forEach((button) => {
@@ -178,8 +181,9 @@ function noteSections(state) {
 
 function configureSpeechRecognition() {
   if (!SpeechRecognition) {
-    speechStatus.textContent = "Dictation unsupported";
+    speechStatus.textContent = "Dictation unavailable";
     speechStatus.className = "status-pill";
+    dictationConsent.disabled = true;
     startDictation.disabled = true;
     stopDictation.disabled = true;
     return;
@@ -192,28 +196,25 @@ function configureSpeechRecognition() {
 
   recognition.onstart = () => {
     isListening = true;
-    speechStatus.textContent = "Listening";
+    speechStatus.textContent = "Mic active";
     speechStatus.className = "status-pill good";
-    startDictation.disabled = true;
-    stopDictation.disabled = false;
+    updateDictationControls(false);
   };
 
   recognition.onerror = (event) => {
     speechStatus.textContent = event.error === "not-allowed" ? "Mic blocked" : "Dictation paused";
     speechStatus.className = "status-pill";
     isListening = false;
-    startDictation.disabled = false;
-    stopDictation.disabled = true;
+    updateDictationControls(false);
   };
 
   recognition.onend = () => {
     isListening = false;
-    if (speechStatus.textContent === "Listening") {
+    if (speechStatus.textContent === "Mic active" || speechStatus.textContent === "Processing speech") {
       speechStatus.textContent = "Mic idle";
       speechStatus.className = "status-pill neutral";
     }
-    startDictation.disabled = false;
-    stopDictation.disabled = true;
+    updateDictationControls();
   };
 
   recognition.onresult = (event) => {
@@ -234,10 +235,12 @@ function configureSpeechRecognition() {
     }
 
     if (interimText.trim()) {
-      speechStatus.textContent = "Listening...";
+      speechStatus.textContent = "Processing speech";
       speechStatus.className = "status-pill good";
     }
   };
+
+  updateDictationControls();
 }
 
 function appendDictation(text) {
@@ -246,6 +249,11 @@ function appendDictation(text) {
 }
 
 function startListening() {
+  if (!dictationConsent.checked) {
+    speechStatus.textContent = "Confirm privacy";
+    speechStatus.className = "status-pill";
+    return;
+  }
   if (!recognition || isListening) return;
   try {
     recognition.start();
@@ -258,6 +266,16 @@ function startListening() {
 function stopListening() {
   if (!recognition || !isListening) return;
   recognition.stop();
+}
+
+function updateDictationControls(syncStatus = true) {
+  const consented = dictationConsent.checked;
+  startDictation.disabled = !recognition || !consented || isListening;
+  stopDictation.disabled = !recognition || !isListening;
+  if (syncStatus && !isListening && recognition) {
+    speechStatus.textContent = consented ? "Mic ready" : "Mic idle";
+    speechStatus.className = "status-pill neutral";
+  }
 }
 
 function applyDictationToFields() {
@@ -430,17 +448,40 @@ function switchTab(tab) {
 function saveFeedback(event) {
   event.preventDefault();
   const entries = JSON.parse(localStorage.getItem("aligndeskFeedback") || "[]");
-  entries.push({
+  entries.push(currentFeedback());
+  localStorage.setItem("aligndeskFeedback", JSON.stringify(entries));
+  feedbackSaved.textContent = `Saved ${entries.length} reaction${entries.length === 1 ? "" : "s"} locally.`;
+  feedbackForm.reset();
+}
+
+function currentFeedback() {
+  return {
     savedAt: new Date().toISOString(),
     role: document.querySelector("#feedbackRole").value,
     saveTime: document.querySelector("#saveTime").value,
     priceReaction: document.querySelector("#priceReaction").value,
     missingPiece: document.querySelector("#missingPiece").value.trim(),
     patientCase: getState().visitType,
-  });
-  localStorage.setItem("aligndeskFeedback", JSON.stringify(entries));
-  feedbackSaved.textContent = `Saved ${entries.length} reaction${entries.length === 1 ? "" : "s"} locally.`;
-  feedbackForm.reset();
+  };
+}
+
+function emailFeedback() {
+  const feedback = currentFeedback();
+  const body = [
+    "AlignDeskApp demo reaction",
+    "",
+    `Clinic role: ${feedback.role}`,
+    `Would this save time: ${feedback.saveTime}`,
+    `Monthly price reaction: ${feedback.priceReaction}`,
+    `Biggest missing piece: ${feedback.missingPiece || "Not provided"}`,
+    `Demo case viewed: ${feedback.patientCase}`,
+    "",
+    "No patient names or identifying details should be included in this demo feedback.",
+  ].join("\n");
+
+  window.location.href = `mailto:research@aligndeskapp.com?subject=${encodeURIComponent(
+    "AlignDeskApp demo reaction",
+  )}&body=${encodeURIComponent(body)}`;
 }
 
 function exportFeedback() {
@@ -462,6 +503,21 @@ function exportFeedback() {
   URL.revokeObjectURL(url);
 }
 
+function copyShareLink() {
+  const originalText = shareButton.textContent;
+  navigator.clipboard
+    .writeText(window.location.href)
+    .then(() => {
+      shareButton.textContent = "Link copied";
+      setTimeout(() => {
+        shareButton.textContent = originalText;
+      }, 1400);
+    })
+    .catch(() => {
+      window.prompt("Copy this demo link:", window.location.href);
+    });
+}
+
 document.querySelectorAll(".case-button").forEach((button) => {
   button.addEventListener("click", () => applyTemplate(button.dataset.template));
 });
@@ -479,13 +535,15 @@ document.querySelector("#resetButton").addEventListener("click", () => applyTemp
 document.querySelector("#copyButton").addEventListener("click", () => copyText(ehrOutput.value));
 document.querySelector("#copyPlainButton").addEventListener("click", () => copyText(ehrOutput.value));
 document.querySelector("#exportFeedbackButton").addEventListener("click", exportFeedback);
+shareButton.addEventListener("click", copyShareLink);
+emailFeedbackButton.addEventListener("click", emailFeedback);
+dictationConsent.addEventListener("change", updateDictationControls);
 startDictation.addEventListener("click", startListening);
 stopDictation.addEventListener("click", stopListening);
 applyDictation.addEventListener("click", applyDictationToFields);
 clearDictation.addEventListener("click", () => {
   dictationNotes.value = "";
-  speechStatus.textContent = "Mic idle";
-  speechStatus.className = "status-pill neutral";
+  updateDictationControls();
   render();
 });
 

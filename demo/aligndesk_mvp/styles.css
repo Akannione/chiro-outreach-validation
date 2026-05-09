@@ -228,6 +228,12 @@ h3 {
   opacity: 0.48;
 }
 
+.inline-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .workflow-grid {
   display: grid;
   grid-template-columns: minmax(340px, 0.95fr) minmax(420px, 1.05fr);
@@ -340,6 +346,22 @@ textarea {
   color: var(--muted);
   font-size: 0.84rem;
   line-height: 1.45;
+}
+
+.safety-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 12px;
+  color: var(--muted);
+  font-size: 0.84rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.safety-check input {
+  margin-top: 3px;
+  accent-color: var(--accent);
 }
 
 .dictation-actions {

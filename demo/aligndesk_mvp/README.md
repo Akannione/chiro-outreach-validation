@@ -12,6 +12,10 @@ Show a clinic owner or staff member a concrete workflow:
 4. Copy a plain-text EHR-ready output.
 5. Capture the clinic's reaction and willingness to pay.
 
+## Privacy Boundary
+
+Use fake or de-identified examples only. The demo has no backend database and does not store audio, but browser speech recognition may process microphone audio through the browser vendor. Do not use real patient names, dates of birth, contact details, insurance data, or other identifiers in this validation demo.
+
 ## Run
 
 Open this file in a browser:
@@ -37,15 +41,16 @@ Included:
 - Chiropractic-specific templates
 - SOAP note generation
 - EHR copy output
+- Clinician-controlled dictation
 - Follow-up task list
-- Local demo feedback capture
+- Local demo feedback capture and email reaction handoff
 
 Excluded:
 
 - User accounts
 - Patient storage
+- Passive session recording
 - EHR integrations
 - Billing
 - Scheduling
 - Real clinical decision support
-
