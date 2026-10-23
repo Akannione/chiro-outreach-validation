@@ -8,7 +8,7 @@ from .csv_store import append_log, load_contacts, read_rows, save_contacts
 from .normalization import stable_id
 from .paths import OUTREACH_LOG_CSV
 from .templates import build_outreach_email
-from .time_utils import utc_now_iso
+from .time_utils import parse_iso_datetime, utc_now_iso
 
 
 FORM_OUTREACH_STATUSES = {"form_needs_review", "form_draft_ready"}
@@ -292,18 +292,6 @@ def outreach_events_in_last_24_hours() -> int:
         if timestamp and timestamp >= cutoff:
             count += 1
     return count
-
-
-def parse_iso_datetime(value: str) -> datetime | None:
-    if not value:
-        return None
-    try:
-        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
-    except ValueError:
-        return None
-    if parsed.tzinfo is None:
-        parsed = parsed.replace(tzinfo=timezone.utc)
-    return parsed
 
 
 def append_note(existing: str, note: str) -> str:

@@ -8,7 +8,7 @@ from .csv_store import append_log, load_contacts, load_suppression, read_rows, s
 from .google_auth import OUTREACH_GOOGLE_SCOPES, google_service
 from .normalization import email_domain, normalize_email, stable_id
 from .paths import OUTREACH_LOG_CSV
-from .time_utils import utc_now_iso
+from .time_utils import parse_iso_datetime, utc_now_iso
 
 
 GMAIL_SCOPES = OUTREACH_GOOGLE_SCOPES
@@ -268,18 +268,6 @@ def sent_in_last_24_hours() -> int:
         if timestamp and timestamp >= cutoff:
             count += 1
     return count
-
-
-def parse_iso_datetime(value: str) -> datetime | None:
-    if not value:
-        return None
-    try:
-        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
-    except ValueError:
-        return None
-    if parsed.tzinfo is None:
-        parsed = parsed.replace(tzinfo=timezone.utc)
-    return parsed
 
 
 def gmail_after_date(value: str) -> str:
